@@ -1,37 +1,32 @@
-function schoolGrades(input) {
-  //collection
-  let result = new Map();
-  //for each line
+function solve(input) {
+  let result = {};
+  let avg = 0;
+
   for (let line of input) {
-    //parse and convert to Number
-    let tokens = line.split(' ');
-    let name = tokens.shift();
-    let grades = (tokens = tokens.map(Number));
-    // ensure names and grades always exist
-    if (result.has(name) == false) {
-      result.set(name, []);
-    }
-    //find existing grades and add new grades
-    // nalivash kum imeto ocenki v mapa
-    let existing = result.get(name);
-    for (let grade of grades) {
-      existing.push(grade);
+    let token = line.split(" ");
+    let name = token.shift();
+    let grades = token.map(Number);
+
+    if (!result.hasOwnProperty(name)) {
+      result[name] = grades;
+    } else {
+      let oldGrades = result[name];
+      let newGrades = grades;
+      result[name] = oldGrades.concat(newGrades);
     }
   }
-  //sort by student name
-  let sorted = Array.from(result);
-  sorted.sort = ((a, b) => a[0].localeCompare(b[0]));
-  //print
+  let sortedObject = Object.entries(result);
+  sortedObject.sort((a, b) => a[0].localeCompare(b[0]));
 
-  for (let [name, grades] of sorted) {
-    let avarage = 0;
-    for (let grade of grades) {
-      avarage += grade;
+  for (let [key, value] of sortedObject) {
+    let sum = 0;
+    for (let grade of value) {
+      sum += grade;
     }
-    avarage /= grades.length;
-    console.log(`${name}: ${avarage.toFixed(2)}`);
+    avg = sum / value.length;
+    console.log(`${key}: ${avg.toFixed(2)}`);
   }
 }
-schoolGrades(["Lilly 4 6 6 5", "Tim 5 6", "Tammy 2 4 3", "Tim 6 6"]);
+solve(["Lilly 4 6 6 5", "Tim 5 6", "Tammy 2 4 3", "Tim 6 6"]);
 console.log("........");
-schoolGrades(["Steven 3 5 6 4", "George 4 6", "Tammy 2 5 3", "Steven 6 3"]);
+solve(["Steven 3 5 6 4", "George 4 6", "Tammy 2 5 3", "Steven 6 3"]);
